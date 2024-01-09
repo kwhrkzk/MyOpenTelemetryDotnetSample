@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: myzipkin
+    ports:
+      - 9411:9411
+    healthcheck:
+      test: ["CMD", "wget", "-O", "-", "http://myzipkin:9411/zipkin"]
+      interval: 10s
+      timeout: 10s
+      retries: 2
+      start_period: 20s
+
+  console:
+    build:
+      context: src/myopentelemetryconsole
+      target: release
+    image: myopentelemetryconsole
+    container_name: myopentelemetryconsole
+    depends_on:
+      zipkin:
+        condition: service_healthy
+

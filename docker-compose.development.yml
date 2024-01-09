@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+
+  console:
+    build:
+      context: src/myopentelemetryconsole
+      target: development
+    image: myopentelemetryconsole-development
+    container_name: myopentelemetryconsole-development
+    stdin_open: true
+    tty: true
+    volumes:
+      - ./src:/workspace
+    entrypoint: /bin/bash
