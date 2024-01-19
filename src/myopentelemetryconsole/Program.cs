@@ -1,15 +1,19 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Trace;
-using System.Diagnostics;
+﻿using domain;
+using infra;
+using infra.context;
 using Microsoft.Extensions.DependencyInjection;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Metrics;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using myopentelemetryconsole;
 using OpenTelemetry.Exporter;
-using Microsoft.EntityFrameworkCore;
 using OpenTelemetry.Instrumentation.EntityFrameworkCore;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using System.Data;
+using System.Diagnostics;
+using usecase;
 
 ConsoleAppBuilder builder = ConsoleApp.CreateBuilder(args);
 
@@ -29,7 +33,10 @@ builder.ConfigureLogging((HostBuilderContext ctxt, ILoggingBuilder builder) =>
 
     services.AddSingleton<ActivitySource>(new ActivitySource(environmentName));
 
-    services.AddDbContext<MyDbContext>((DbContextOptionsBuilder op) => op.UseSqlite("Data Source=mysqlite.db"));
+    services.AddDbContext<MyDbContext>();
+    services.AddTransient<IOperateDB, OperateDB>();
+
+    services.AddUsecaseDecorator();
 
     services.AddOpenTelemetry()
     .WithTracing((TracerProviderBuilder tracing) => tracing

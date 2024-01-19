@@ -11,3 +11,4 @@ FROM mcr.microsoft.com/dotnet/runtime:8.0 AS release
 WORKDIR /workspace
 COPY --from=build-env /workspace/out .
 ENTRYPOINT [ "dotnet", "myopentelemetryconsole.dll" ]
+CMD ["UsecaseA", "-s", "hello"]

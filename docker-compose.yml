@@ -15,7 +15,7 @@ services:
 
   console:
     build:
-      context: src/myopentelemetryconsole
+      context: src
       target: release
     image: myopentelemetryconsole
     container_name: myopentelemetryconsole

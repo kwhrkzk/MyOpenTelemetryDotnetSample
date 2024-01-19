@@ -4,7 +4,7 @@ services:
 
   console:
     build:
-      context: src/myopentelemetryconsole
+      context: src
       target: development
     image: myopentelemetryconsole-development
     container_name: myopentelemetryconsole-development
@@ -13,3 +13,4 @@ services:
     volumes:
       - ./src:/workspace
     entrypoint: /bin/bash
+    command: []

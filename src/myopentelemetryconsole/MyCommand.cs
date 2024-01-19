@@ -1,43 +1,21 @@
-using System.Diagnostics;
-using Microsoft.Extensions.Logging;
+using domain;
 
-public class MyCommand(ILogger<MyCommand> logger, MyDbContext db, ActivitySource activitySource) : ConsoleAppBase
+namespace myopentelemetryconsole;
+
+public class MyCommand(IDoA doA, IDoB doB) : ConsoleAppBase
 {
-    private ILogger<MyCommand> Logger { get; } = logger;
-    private MyDbContext Db { get; } = db;
-    private ActivitySource MyActivitySource { get; } = activitySource;
+    private IDoA DoA { get; } = doA;
+    private IDoB DoB { get; } = doB;
 
-    [RootCommand]
-    public void Exec()
+
+    public void UsecaseA([Option("s")] string something)
     {
-        Logger.LogInformation("hello world");
+        DoA.DoitA(something);
 
-        Activity? activity = MyActivitySource.StartActivity("mycommand");
-        if (activity is null)
-            return;
+    }
 
-        try
-        {
-            Db.Database.EnsureDeleted();
-            Db.Database.EnsureCreated();
-
-            Db.MyModels.Add(new MyModel() { Id = 1, Name = "test" });
-            Db.SaveChanges();
-
-            foreach (var item in Db.MyModels.ToList())
-                activity.SetTag(item.Name, item.Id);
-
-            activity.SetStatus(ActivityStatusCode.Ok);
-
-            Db.Database.EnsureDeleted();
-        }
-        catch (Exception ex)
-        {
-            activity.SetStatus(ActivityStatusCode.Error, ex.Message);
-        }
-        finally
-        {
-            activity.Dispose();
-        }
+    public void UsecaseB([Option("s1")] string something1, [Option("s2")] int something2)
+    {
+        DoB.DoitB(something1, something2);
     }
 }

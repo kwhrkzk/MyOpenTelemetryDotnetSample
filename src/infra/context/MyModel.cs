@@ -1,3 +1,5 @@
+namespace infra.context;
+
 #nullable disable
 public record MyModel
 {
